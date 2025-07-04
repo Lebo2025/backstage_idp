@@ -1,0 +1,97 @@
+# Backstage Internal Developer Portal
+
+A production-ready Backstage IDP deployment with GitHub authentication and Kubernetes support.
+
+## 🚀 Features
+
+- ✅ GitHub OAuth Authentication
+- ✅ Software Catalog
+- ✅ Software Templates
+- ✅ TechDocs
+- ✅ API Explorer
+- ✅ Kubernetes Deployment
+- ✅ PostgreSQL Database
+- ✅ AWS EKS Ready
+
+## 🏃‍♂️ Quick Start
+
+### Local Development
+
+```bash
+yarn install
+yarn start
+```
+
+### Kubernetes Deployment
+
+```bash
+./deploy-to-eks.sh
+```
+
+## 📁 Project Structure
+
+```
+├── packages/
+│   ├── app/           # Frontend application
+│   └── backend/       # Backend services
+├── k8s/              # Kubernetes manifests
+├── plugins/          # Backstage plugins
+└── docs/            # Documentation
+```
+
+## 🔧 Configuration
+
+### GitHub Authentication
+
+1. Create GitHub OAuth App
+2. Copy `.env.example` to `.env` and update with your credentials
+3. Add user to `packages/catalog-model/examples/acme/org.yaml`
+
+### Environment Variables
+
+- `GITHUB_TOKEN` - GitHub personal access token
+- `AUTH_GITHUB_CLIENT_ID` - GitHub OAuth client ID
+- `AUTH_GITHUB_CLIENT_SECRET` - GitHub OAuth client secret
+
+## 🚀 Deployment
+
+### Prerequisites
+
+- Node.js 18+
+- Yarn
+- Docker (for K8s deployment)
+- kubectl (for K8s deployment)
+
+### Local Development
+
+```bash
+# Install dependencies
+yarn install
+
+# Setup environment variables
+cp .env.example .env
+# Edit .env with your GitHub credentials
+
+# Start development server
+yarn start
+```
+
+### Kubernetes Deployment
+
+See [k8s/README.md](k8s/README.md) for detailed instructions.
+
+## 📚 Documentation
+
+- [Kubernetes Deployment Guide](k8s/README.md)
+- [Backstage Documentation](https://backstage.io/docs/)
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Submit a pull request
+
+## 📄 License
+
+Apache 2.0 - See [LICENSE](LICENSE) file for details.
