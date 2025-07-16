@@ -15,11 +15,22 @@ A production-ready Backstage IDP deployment with GitHub authentication and Kuber
 
 ## 🏃‍♂️ Quick Start
 
-### Local Development
+### Create New Backstage App
 
 ```bash
-yarn install
-yarn start
+# Create new Backstage app with proper structure
+./create-backstage-app.sh
+
+# Setup GitHub authentication
+./setup-github-auth.sh my-backstage-app
+
+# Copy environment template
+cp .env.example my-backstage-app/.env
+# Edit .env with your GitHub credentials
+
+# Start development
+cd my-backstage-app
+yarn dev
 ```
 
 ### Kubernetes Deployment
@@ -31,12 +42,12 @@ yarn start
 ## 📁 Project Structure
 
 ```
-├── packages/
-│   ├── app/           # Frontend application
-│   └── backend/       # Backend services
-├── k8s/              # Kubernetes manifests
-├── plugins/          # Backstage plugins
-└── docs/            # Documentation
+├── k8s/                      # Kubernetes manifests
+├── create-backstage-app.sh   # Script to create new Backstage app
+├── setup-github-auth.sh      # Script to setup GitHub authentication
+├── deploy-to-eks.sh          # EKS deployment script
+├── .env.example              # Environment variables template
+└── README.md                 # This documentation
 ```
 
 ## 🔧 Configuration

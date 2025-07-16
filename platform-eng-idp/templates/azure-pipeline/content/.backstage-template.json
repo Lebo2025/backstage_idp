@@ -1,0 +1,10 @@
+{
+  "templateName": "azure-pipeline-template",
+  "templateVersion": "1.0.0",
+  "createdDate": "{{ now | date('YYYY-MM-DD') }}",
+  "parameters": {
+    "name": "${{ values.name }}",
+    "resourceGroup": "${{ values.resourceGroup }}",
+    "azureSubscription": "${{ values.azureSubscription }}"
+  }
+}

@@ -1,0 +1,60 @@
+app:
+  title: Backstage IDP
+  baseUrl: http://localhost:3000
+
+organization:
+  name: Standard bank IDP
+
+backend:
+  baseUrl: http://localhost:7007
+  listen:
+    port: 7007
+  csp:
+    connect-src: ["'self'", 'http:', 'https:']
+  cors:
+    origin: http://localhost:3000
+    methods: [GET, HEAD, PATCH, POST, PUT, DELETE]
+    credentials: true
+  database:
+    client: better-sqlite3
+    connection: ':memory:'
+
+integrations:
+  github:
+    - host: github.com
+      token: ${GITHUB_TOKEN}
+
+techdocs:
+  builder: 'local'
+  generator:
+    runIn: 'docker'
+  publisher:
+    type: 'local'
+
+auth:
+  environment: development
+  providers:
+    github:
+      development:
+        clientId: ${AUTH_GITHUB_CLIENT_ID}
+        clientSecret: ${AUTH_GITHUB_CLIENT_SECRET}
+        signIn:
+          resolvers:
+            - resolver: usernameMatchingUserEntityName
+
+scaffolder:
+  defaultAuthor:
+    name: Scaffolder
+    email: scaffolder@backstage.io
+
+catalog:
+  import:
+    entityFilename: catalog-info.yaml
+    pullRequestBranchName: backstage-integration
+  rules:
+    - allow: [Component, System, API, Resource, Location]
+  locations:
+    - type: file
+      target: ../../examples/entities.yaml
+      rules:
+        - allow: [User, Group]

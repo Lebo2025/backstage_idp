@@ -1,0 +1,48 @@
+name: Deploy Azure Pipeline Infrastructure
+
+on:
+  push:
+    branches: [main]
+    paths: ['backstage-idp-deploy/platform-eng-idp/templates/azure-pipeline/**']
+  workflow_dispatch:
+
+jobs:
+  deploy-infrastructure:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_version: '1.5.0'
+
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+    - name: Terraform Init
+      working-directory: ./backstage-idp-deploy/platform-eng-idp/templates/azure-pipeline/content/terraform
+      run: terraform init
+
+    - name: Terraform Plan
+      working-directory: ./backstage-idp-deploy/platform-eng-idp/templates/azure-pipeline/content/terraform
+      run: terraform plan
+      env:
+        TF_VAR_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        TF_VAR_resource_group_name: ${{ secrets.AZURE_RESOURCE_GROUP }}
+        TF_VAR_app_name: ${{ secrets.APP_NAME }}
+
+    - name: Terraform Apply
+      if: github.ref == 'refs/heads/main'
+      working-directory: ./backstage-idp-deploy/platform-eng-idp/templates/azure-pipeline/content/terraform
+      run: terraform apply -auto-approve
+      env:
+        TF_VAR_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        TF_VAR_resource_group_name: ${{ secrets.AZURE_RESOURCE_GROUP }}
+        TF_VAR_app_name: ${{ secrets.APP_NAME }}

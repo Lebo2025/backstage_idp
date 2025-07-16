@@ -1,0 +1,93 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: azure-pipeline-template
+  title: Azure DevOps Pipeline
+  description: Create a new project with Azure DevOps CI/CD pipeline
+  tags:
+    - azure
+    - pipeline
+    - devops
+spec:
+  owner: platform-team
+  type: service
+  parameters:
+    - title: Project Information
+      required:
+        - name
+        - description
+      properties:
+        name:
+          title: Name
+          type: string
+          description: Unique name of the component
+        description:
+          title: Description
+          type: string
+          description: Help others understand what this service is for
+        owner:
+          title: Owner
+          type: string
+          description: Owner of the component
+          default: team-a
+    - title: Repository
+      required:
+        - repoUrl
+      properties:
+        repoUrl:
+          title: Repository Location
+          type: string
+          ui:field: RepoUrlPicker
+          ui:options:
+            allowedHosts:
+              - github.com
+    - title: Azure Configuration
+      required:
+        - azureSubscription
+        - resourceGroup
+      properties:
+        azureSubscription:
+          title: Azure Subscription
+          type: string
+          description: Azure subscription ID
+        resourceGroup:
+          title: Resource Group
+          type: string
+          description: Azure resource group name
+        appServicePlan:
+          title: App Service Plan
+          type: string
+          description: Azure App Service Plan name
+          default: default-plan
+  steps:
+    - id: fetch
+      name: Fetch Base
+      action: fetch:template
+      input:
+        url: ./content
+        values:
+          name: ${{ parameters.name }}
+          description: ${{ parameters.description }}
+          owner: ${{ parameters.owner }}
+          azureSubscription: ${{ parameters.azureSubscription }}
+          resourceGroup: ${{ parameters.resourceGroup }}
+          appServicePlan: ${{ parameters.appServicePlan }}
+    - id: publish
+      name: Publish
+      action: publish:github
+      input:
+        description: ${{ parameters.description }}
+        repoUrl: ${{ parameters.repoUrl }}
+    - id: register
+      name: Register
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
+        catalogInfoPath: '/catalog-info.yaml'
+  output:
+    links:
+      - title: Repository
+        url: ${{ steps.publish.output.remoteUrl }}
+      - title: Open in catalog
+        icon: catalog
+        entityRef: ${{ steps.register.output.entityRef }}
