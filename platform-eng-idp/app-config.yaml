@@ -97,6 +97,12 @@ catalog:
       target: ../../templates/azure-pipeline/template.yaml
       rules:
         - allow: [Template]
+    
+    # Azure VM Template
+    - type: file
+      target: ../../templates/azure-vm/template.yaml
+      rules:
+        - allow: [Template]
 
     # Local example organizational data
     - type: file
